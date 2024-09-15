@@ -13,7 +13,7 @@ resources:
     ## Pipeline template code repo definition
     - repository: Infrastructure_Template
       type: git
-      name: IC-Command-Control-Project/Infrastructure_Template
+      name: dev/Infrastructure_Template
       endpoint: Infrastructure_Template
       ref: main
      
