@@ -40,19 +40,43 @@ resources:
       ref: main
 ```
 
-# creating variable group 
-Go to Azure devops > pipelines > library > + library group > 
-Variable group name = terraform_eventhub
+To create a variable group in Azure DevOps and update it with the required dummy values, follow these steps:
 
-click on variables add
-names add values accordingly 
+### Step 1: Create a Variable Group
 
-resource_group 
-storage_account
-container_name
-service_connection
+1. **Navigate to Azure DevOps:**
+   - Go to your Azure DevOps organization (e.g., https://dev.azure.com/your-org).
 
+2. **Open Your Project:**
+   - Select the project in which you want to create the variable group.
 
+3. **Go to Pipelines > Library:**
+   - On the left-hand menu, click on **Pipelines** and then select **Library**.
+
+4. **Create a Variable Group:**
+   - Click the **+ Variable group** button to create a new variable group.
+
+5. **Name the Variable Group:**
+   - Provide a meaningful name for the variable group (e.g., `terraform_eventhub`).
+
+6. **Add Variables:**
+   - Add the following dummy values as variables, which correspond to the required variables in the pipeline:
+
+    | Variable Name           | Value              | Description                                    |
+    |-------------------------|--------------------|------------------------------------------------|
+    | `resource_group_qa`      | `dummy-rg-qa`      | Resource Group for the QA environment          |
+    | `storage_account_qa`     | `dummy-sa-qa`      | Storage Account name for QA environment        |
+    | `container_name_qa`      | `dummy-container-qa` | Container name for QA environment              |
+    | `service_connection_qa`  | `dummy-service-qa` | Service connection for QA environment          |
+    | `resource_group_prod`    | `dummy-rg-prod`    | Resource Group for the PROD environment        |
+    | `storage_account_prod`   | `dummy-sa-prod`    | Storage Account name for PROD environment      |
+    | `container_name_prod`    | `dummy-container-prod` | Container name for PROD environment            |
+    | `service_connection_prod`| `dummy-service-prod`| Service connection for PROD environment        |
+
+   - For each variable, click **Add** and specify the variable name and value. Leave the **Secret** toggle off since these are dummy values (unless storing sensitive information like connection strings, which would require enabling the **Secret** toggle).
+
+7. **Save the Variable Group:**
+   - Once all the variables are added, click **Save**.
 
 ### 4. **Variables**
 
