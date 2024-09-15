@@ -40,13 +40,27 @@ resources:
       ref: main
 ```
 
+# creating variable group 
+Go to Azure devops > pipelines > library > + library group > 
+Variable group name = terraform_eventhub
+
+click on variables add
+names add values accordingly 
+
+resource_group 
+storage_account
+container_name
+service_connection
+
+
+
 ### 4. **Variables**
 
-A variable group `terraform_adani_eventhub` is used to manage environment-specific variables like resource groups, storage accounts, etc.
+A variable group `terraform_eventhub` is used to manage environment-specific variables like resource groups, storage accounts, etc.
 
 ```yaml
 variables:
-  - group: terraform_adani_eventhub
+  - group: terraform_eventhub
 ```
 
 ### 5. **Stages**
