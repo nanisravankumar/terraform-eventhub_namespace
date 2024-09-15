@@ -1,0 +1,82 @@
+pool: 'IC-DEV-SelfHosted'
+
+parameters:
+  - name: env
+    displayName: Environment
+    type: object
+    default:
+      - qa
+      - prod
+
+resources:
+  repositories:
+    ## Pipeline template code repo definition
+    - repository: Infrastructure_Template
+      type: git
+      name: IC-Command-Control-Project/Infrastructure_Template
+      endpoint: Infrastructure_Template
+      ref: main
+     
+variables:
+- group: terraform_adani_eventhub
+stages:
+- ${{ each envObject in parameters.env }}:
+  - stage: ${{ envObject }}_Plan
+    displayName: ${{ envObject }}_Terraform_plan
+    jobs:
+    - job: Terraform_plan
+    #   pool:
+    #     vmImage: 'ubuntu-latest'
+      variables:
+       resource_group: $(resource_group_${{ envObject }})
+       storage_account: $(storage_account_${{ envObject }})
+       container_name: $(container_name_${{ envObject }})
+       service_connection: $(service_connection_${{ envObject }})
+      steps:     
+      - script: |       
+          echo "Running validation for ${{ envObject }}"
+          # Print the variables for verification
+          echo "Resource Group: $(resource_group)"
+          echo "Storage Account: $(storage_account)"
+          echo "Container Name: $(container_name)"
+          echo "Service  Name: $(service_connection)"
+
+        displayName: Print Backend variable values
+      - template: template/tf_plan.yml@Infrastructure_Template
+        parameters:
+          env: ${{ envObject }}
+          infraType : eventhub
+         
+  - stage: ${{ envObject }}_Manual_Approval
+    jobs:
+    - job: waitForValidation
+      displayName: ${{ envObject }}_Manual_Approval
+      pool: server
+      timeoutInMinutes: 4320 # job times out in 3 days
+      steps:
+      - template: template/steps/approval.yml@Infrastructure_Template
+
+  - stage: ${{ envObject }}_Apply
+    displayName: ${{ envObject }}_Terraform_Apply
+    jobs:
+    - job: Terraform_ApplyJob
+    #   pool:
+    #     vmImage: 'ubuntu-latest'
+      variables:
+       resource_group: $(resource_group_${{ envObject }})
+       storage_account: $(storage_account_${{ envObject }})
+       container_name: $(container_name_${{ envObject }})
+       service_connection: $(service_connection_${{ envObject }})
+      steps:     
+      - script: |       
+          echo "Running validation for ${{ envObject }}"
+          # Print the variables for verification
+          echo "Resource Group: $(resource_group)"
+          echo "Storage Account: $(storage_account)"
+          echo "Container Name: $(container_name)"
+          echo "Service  Name: $(service_connection)"
+        displayName: Print Backend variable values
+      - template: template/tf_apply.yml@Infrastructure_Template
+        parameters:
+          env: ${{ envObject }}
+          infraType : eventhub
